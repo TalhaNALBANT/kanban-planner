@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Column from './Column';
+import TaskModal from './TaskModal';
 
 const COLUMNS = ["Backlog", "Todo", "In Progress", "Done"];
 
@@ -19,6 +20,9 @@ export default function Board() {
             { id: '3', title: 'Create Drag & Drop feature', status: 'Todo' }
         ];
     });
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeColumn, setActiveColumn] = useState(null);
 
     useEffect(() => {
         localStorage.setItem('kanban-tasks', JSON.stringify(tasks));
@@ -44,17 +48,21 @@ export default function Board() {
         }));
     };
 
-    const addTask = (status) => {
-        const title = window.prompt("Enter task details:");
-        if (!title || title.trim() === '') return;
+    const openAddTaskModal = (status) => {
+        setActiveColumn(status);
+        setIsModalOpen(true);
+    };
 
+    const handleSaveTask = (taskData) => {
         const newTask = {
             id: crypto.randomUUID(),
-            title: title.trim(),
-            status
+            title: taskData.title.trim(),
+            description: taskData.description.trim(),
+            status: activeColumn
         };
 
         setTasks([...tasks, newTask]);
+        setIsModalOpen(false);
     };
 
     const deleteTask = (taskId) => {
@@ -64,19 +72,29 @@ export default function Board() {
     };
 
     return (
-        <div className="board">
-            {COLUMNS.map(col => (
-                <Column
-                    key={col}
-                    title={col}
-                    tasks={tasks.filter(t => t.status === col)}
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onAddTask={() => addTask(col)}
-                    onDeleteTask={deleteTask}
+        <>
+            <div className="board">
+                {COLUMNS.map(col => (
+                    <Column
+                        key={col}
+                        title={col}
+                        tasks={tasks.filter(t => t.status === col)}
+                        onDragStart={handleDragStart}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                        onAddTask={() => openAddTaskModal(col)}
+                        onDeleteTask={deleteTask}
+                    />
+                ))}
+            </div>
+
+            {isModalOpen && (
+                <TaskModal
+                    columnName={activeColumn}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSaveTask}
                 />
-            ))}
-        </div>
+            )}
+        </>
     );
 }

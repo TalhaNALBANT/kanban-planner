@@ -5,7 +5,10 @@ export default function TaskCard({ task, onDragStart, onDelete }) {
             draggable
             onDragStart={(e) => onDragStart(e, task.id)}
         >
-            <p>{task.title}</p>
+            <div className="task-content">
+                <p className="task-title">{task.title}</p>
+                {task.description && <p className="task-desc">{task.description}</p>}
+            </div>
             <button
                 className="delete-btn"
                 onClick={() => onDelete(task.id)}
