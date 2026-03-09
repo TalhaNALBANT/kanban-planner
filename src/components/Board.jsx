@@ -15,9 +15,9 @@ export default function Board() {
             }
         }
         return [
-            { id: '1', title: 'Learn Vite & React', status: 'Done' },
-            { id: '2', title: 'Implement CSS variables', status: 'In Progress' },
-            { id: '3', title: 'Create Drag & Drop feature', status: 'Todo' }
+            { id: '1', title: 'Learn Vite & React', description: '', status: 'Done', priority: 'High', tags: ['documentation'], assignee: 'Alex', dueDate: '2024-01-10' },
+            { id: '2', title: 'Implement CSS variables', description: 'Setup color themes', status: 'In Progress', priority: 'Medium', tags: ['styling', 'feature'], assignee: 'Sarah', dueDate: '' },
+            { id: '3', title: 'Create Drag & Drop feature', description: '', status: 'Todo', priority: 'High', tags: ['feature', 'core'], assignee: '', dueDate: '' }
         ];
     });
 
@@ -58,7 +58,11 @@ export default function Board() {
             id: crypto.randomUUID(),
             title: taskData.title.trim(),
             description: taskData.description.trim(),
-            status: activeColumn
+            status: activeColumn,
+            priority: taskData.priority,
+            tags: taskData.tags ? taskData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+            assignee: taskData.assignee.trim(),
+            dueDate: taskData.dueDate
         };
 
         setTasks([...tasks, newTask]);
@@ -69,6 +73,15 @@ export default function Board() {
         if (window.confirm("Are you sure you want to delete this task?")) {
             setTasks(tasks.filter(t => t.id !== taskId));
         }
+    };
+
+    const handleMoveTask = (taskId, newStatus) => {
+        setTasks(prevTasks => prevTasks.map(task => {
+            if (task.id === taskId) {
+                return { ...task, status: newStatus };
+            }
+            return task;
+        }));
     };
 
     return (
@@ -84,6 +97,8 @@ export default function Board() {
                         onDrop={handleDrop}
                         onAddTask={() => openAddTaskModal(col)}
                         onDeleteTask={deleteTask}
+                        allColumns={COLUMNS}
+                        onMoveTask={handleMoveTask}
                     />
                 ))}
             </div>

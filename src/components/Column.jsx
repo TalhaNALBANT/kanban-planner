@@ -1,6 +1,6 @@
 import TaskCard from './TaskCard';
 
-export default function Column({ title, tasks, onDragStart, onDragOver, onDrop, onAddTask, onDeleteTask }) {
+export default function Column({ title, tasks, onDragStart, onDragOver, onDrop, onAddTask, onDeleteTask, allColumns, onMoveTask }) {
     return (
         <div
             className="column glass-panel"
@@ -19,6 +19,8 @@ export default function Column({ title, tasks, onDragStart, onDragOver, onDrop, 
                         task={task}
                         onDragStart={onDragStart}
                         onDelete={onDeleteTask}
+                        allColumns={allColumns}
+                        onMoveTask={onMoveTask}
                     />
                 ))}
             </div>
