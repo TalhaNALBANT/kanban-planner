@@ -454,12 +454,69 @@ body {
   color: #f87171;
 }
 
-.due-date,
-.assignee {
+.due-date {
   display: flex;
   align-items: center;
   gap: 0.2rem;
   background: var(--surface-secondary);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tag-toggle {
+  background: transparent;
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-family: inherit;
+}
+
+.tag-toggle:hover {
+  border-color: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.tag-toggle.selected {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+.add-tag-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-tag-group .modal-input {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn-add-tag {
+  background: var(--surface-secondary);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: var(--text-primary);
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: var(--transition-normal);
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.btn-add-tag:hover {
+  background: var(--surface-primary);
+  border-color: var(--accent-color);
 }

@@ -1,18 +1,35 @@
 import { useState } from 'react';
 
-export default function TaskModal({ columnName, onClose, onSave }) {
+export default function TaskModal({ columnName, onClose, onSave, availableTags = [] }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('Medium');
-    const [tags, setTags] = useState('');
-    const [assignee, setAssignee] = useState('');
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [newTagInput, setNewTagInput] = useState('');
     const [dueDate, setDueDate] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!title.trim()) return;
 
-        onSave({ title, description, priority, tags, assignee, dueDate });
+        onSave({ title, description, priority, tags: selectedTags, dueDate });
+    };
+
+    const toggleTag = (tag) => {
+        if (selectedTags.includes(tag)) {
+            setSelectedTags(selectedTags.filter(t => t !== tag));
+        } else {
+            setSelectedTags([...selectedTags, tag]);
+        }
+    };
+
+    const handleAddCustomTag = (e) => {
+        e.preventDefault();
+        const tag = newTagInput.trim();
+        if (tag && !selectedTags.includes(tag)) {
+            setSelectedTags([...selectedTags, tag]);
+        }
+        setNewTagInput('');
     };
 
     return (
@@ -29,7 +46,7 @@ export default function TaskModal({ columnName, onClose, onSave }) {
                         <input
                             type="text"
                             className="modal-input"
-                            placeholder="e.g., Fix navigation bug"
+                            placeholder="e.g., Grocery shopping"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             autoFocus
@@ -74,26 +91,48 @@ export default function TaskModal({ columnName, onClose, onSave }) {
                     </div>
 
                     <div className="form-row">
-                        <div className="form-group">
-                            <label>Assignee</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                placeholder="e.g., Alex"
-                                value={assignee}
-                                onChange={(e) => setAssignee(e.target.value)}
-                            />
-                        </div>
+                        <div className="form-group" style={{ flex: 'none', width: '100%' }}>
+                            <label>Tags</label>
 
-                        <div className="form-group">
-                            <label>Tags (Comma separated)</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                placeholder="e.g., bug, ui"
-                                value={tags}
-                                onChange={(e) => setTags(e.target.value)}
-                            />
+                            <div className="tags-container">
+                                {availableTags.map(tag => (
+                                    <button
+                                        type="button"
+                                        key={tag}
+                                        className={`tag-toggle ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                                        onClick={() => toggleTag(tag)}
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                                {selectedTags.filter(t => !availableTags.includes(t)).map(tag => (
+                                    <button
+                                        type="button"
+                                        key={tag}
+                                        className="tag-toggle selected"
+                                        onClick={() => toggleTag(tag)}
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="add-tag-group">
+                                <input
+                                    type="text"
+                                    className="modal-input"
+                                    placeholder="Add custom tag (press Enter)"
+                                    value={newTagInput}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            handleAddCustomTag(e);
+                                        }
+                                    }}
+                                    onChange={(e) => setNewTagInput(e.target.value)}
+                                />
+                                <button type="button" className="btn-add-tag" onClick={handleAddCustomTag}>Add Tag</button>
+                            </div>
                         </div>
                     </div>
 

@@ -15,18 +15,34 @@ export default function Board() {
             }
         }
         return [
-            { id: '1', title: 'Learn Vite & React', description: '', status: 'Done', priority: 'High', tags: ['documentation'], assignee: 'Alex', dueDate: '2024-01-10' },
-            { id: '2', title: 'Implement CSS variables', description: 'Setup color themes', status: 'In Progress', priority: 'Medium', tags: ['styling', 'feature'], assignee: 'Sarah', dueDate: '' },
-            { id: '3', title: 'Create Drag & Drop feature', description: '', status: 'Todo', priority: 'High', tags: ['feature', 'core'], assignee: '', dueDate: '' }
+            { id: '1', title: 'Morning Run', description: '30 mins in the park', status: 'Done', priority: 'High', tags: ['Health', 'Personal'], dueDate: new Date().toISOString().split('T')[0] },
+            { id: '2', title: 'Grocery Shopping', description: 'Milk, Eggs, Bread, Coffee', status: 'In Progress', priority: 'Medium', tags: ['Shopping', 'Home'], dueDate: '' },
+            { id: '3', title: 'Read 20 pages', description: 'Finish the current chapter', status: 'Todo', priority: 'Low', tags: ['Personal', 'Hobby'], dueDate: '' }
         ];
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeColumn, setActiveColumn] = useState(null);
 
+    const [availableTags, setAvailableTags] = useState(() => {
+        const saved = localStorage.getItem('kanban-tags');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return [];
+            }
+        }
+        return ['Personal', 'Work', 'Health', 'Shopping', 'Home', 'Hobby'];
+    });
+
     useEffect(() => {
         localStorage.setItem('kanban-tasks', JSON.stringify(tasks));
     }, [tasks]);
+
+    useEffect(() => {
+        localStorage.setItem('kanban-tags', JSON.stringify(availableTags));
+    }, [availableTags]);
 
     const handleDragStart = (e, taskId) => {
         e.dataTransfer.setData("taskId", taskId);
@@ -54,14 +70,20 @@ export default function Board() {
     };
 
     const handleSaveTask = (taskData) => {
+        const newTags = taskData.tags || [];
+
+        const updatedTags = [...new Set([...availableTags, ...newTags])];
+        if (updatedTags.length !== availableTags.length) {
+            setAvailableTags(updatedTags);
+        }
+
         const newTask = {
             id: crypto.randomUUID(),
             title: taskData.title.trim(),
             description: taskData.description.trim(),
             status: activeColumn,
             priority: taskData.priority,
-            tags: taskData.tags ? taskData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-            assignee: taskData.assignee.trim(),
+            tags: newTags,
             dueDate: taskData.dueDate
         };
 
@@ -106,6 +128,7 @@ export default function Board() {
             {isModalOpen && (
                 <TaskModal
                     columnName={activeColumn}
+                    availableTags={availableTags}
                     onClose={() => setIsModalOpen(false)}
                     onSave={handleSaveTask}
                 />

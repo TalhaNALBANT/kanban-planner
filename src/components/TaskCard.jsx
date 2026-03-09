@@ -34,9 +34,6 @@ export default function TaskCard({ task, onDragStart, onDelete, allColumns, onMo
                     {task.dueDate && (
                         <span className="due-date">📅 {new Date(task.dueDate).toLocaleDateString()}</span>
                     )}
-                    {task.assignee && (
-                        <span className="assignee">👤 {task.assignee}</span>
-                    )}
                 </div>
                 <div className="task-footer">
                     <select
