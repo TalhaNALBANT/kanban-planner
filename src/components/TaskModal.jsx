@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-export default function TaskModal({ columnName, onClose, onSave, availableTags = [] }) {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState('Medium');
-    const [selectedTags, setSelectedTags] = useState([]);
+export default function TaskModal({ columnName, onClose, onSave, availableTags = [], initialData = null }) {
+    const [title, setTitle] = useState(initialData?.title || '');
+    const [description, setDescription] = useState(initialData?.description || '');
+    const [priority, setPriority] = useState(initialData?.priority || 'Medium');
+    const [selectedTags, setSelectedTags] = useState(initialData?.tags || []);
     const [newTagInput, setNewTagInput] = useState('');
-    const [dueDate, setDueDate] = useState('');
+    const [dueDate, setDueDate] = useState(initialData?.dueDate || '');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -36,7 +36,7 @@ export default function TaskModal({ columnName, onClose, onSave, availableTags =
         <div className="modal-overlay">
             <div className="modal-content glass-panel">
                 <div className="modal-header">
-                    <h3>Add Task to {columnName}</h3>
+                    <h3>{initialData ? 'Edit Task' : `Add Task to ${columnName}`}</h3>
                     <button className="close-modal-btn" onClick={onClose}>×</button>
                 </div>
 

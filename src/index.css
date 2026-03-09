@@ -109,6 +109,40 @@ body {
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition-normal);
+  padding-right: 1.5rem;
+}
+
+.column-header h3:hover {
+  color: var(--accent-color);
+}
+
+.column-header h3:hover::after {
+  content: '✏️';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.column-title-input {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  background: var(--surface-primary);
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  outline: none;
+  width: 100%;
+  margin-right: 0.5rem;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 .task-count {
@@ -149,24 +183,43 @@ body {
   flex: 1;
 }
 
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.edit-btn,
 .delete-btn {
   background: transparent;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   line-height: 1;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 0 0 0 0.5rem;
+  padding: 0.25rem;
   opacity: 0.5;
   transition: var(--transition-normal);
+  border-radius: 4px;
 }
 
+.delete-btn {
+  font-size: 1.3rem;
+}
+
+.task-card:hover .edit-btn,
 .task-card:hover .delete-btn {
   opacity: 1;
 }
 
+.edit-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
 .delete-btn:hover {
   color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .add-task-btn {

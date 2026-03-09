@@ -1,4 +1,4 @@
-export default function TaskCard({ task, onDragStart, onDelete, allColumns, onMoveTask }) {
+export default function TaskCard({ task, onDragStart, onDelete, allColumns, onMoveTask, onEdit }) {
     return (
         <div
             className="task-card glass-panel"
@@ -8,13 +8,22 @@ export default function TaskCard({ task, onDragStart, onDelete, allColumns, onMo
             <div className="task-content">
                 <div className="task-header">
                     <p className="task-title">{task.title}</p>
-                    <button
-                        className="delete-btn"
-                        onClick={() => onDelete(task.id)}
-                        aria-label="Delete task"
-                    >
-                        ×
-                    </button>
+                    <div className="task-actions">
+                        <button
+                            className="edit-btn"
+                            onClick={() => onEdit()}
+                            aria-label="Edit task"
+                        >
+                            ✏️
+                        </button>
+                        <button
+                            className="delete-btn"
+                            onClick={() => onDelete(task.id)}
+                            aria-label="Delete task"
+                        >
+                            ×
+                        </button>
+                    </div>
                 </div>
                 {task.tags && task.tags.length > 0 && (
                     <div className="task-tags">
